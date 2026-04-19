@@ -1,34 +1,40 @@
 package com.example.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "products")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(nullable = false)
     private String name;
 
     @Column(length = 1024)
     private String description;
 
+    @NotNull
+    @Positive
     @Column(nullable = false)
     private BigDecimal price;
 
-    private String category;
+    // Relationship to Category
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     // Constructors
     public Product() {}
 
-    public Product(String name, String description, BigDecimal price, String category) {
+    public Product(String name, String description, BigDecimal price, Category category) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -68,11 +74,11 @@ public class Product {
         this.price = price;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 }
