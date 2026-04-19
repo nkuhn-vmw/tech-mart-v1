@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 
 @Entity
@@ -26,6 +27,12 @@ public class Product {
     @Column(nullable = false)
     private BigDecimal price;
 
+    // Stock quantity for the product
+    @NotNull
+    @PositiveOrZero
+    @Column(nullable = false)
+    private Integer stock;
+
     // Relationship to Category
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
@@ -34,10 +41,11 @@ public class Product {
     // Constructors
     public Product() {}
 
-    public Product(String name, String description, BigDecimal price, Category category) {
+    public Product(String name, String description, BigDecimal price, Integer stock, Category category) {
         this.name = name;
         this.description = description;
         this.price = price;
+        this.stock = stock;
         this.category = category;
     }
 
@@ -72,6 +80,14 @@ public class Product {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 
     public Category getCategory() {
