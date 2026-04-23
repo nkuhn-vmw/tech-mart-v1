@@ -5,5 +5,6 @@ package com.example.domain;
  * The functional JPA entity resides in com.example.entity.Product.
  */
 public class Product {
-    // No fields needed.
+    // This is intentionally left minimal to avoid conflicts
+    // All actual product logic and fields are in com.example.entity.Product
 }
