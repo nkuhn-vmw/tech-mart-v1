@@ -1,1 +1,1 @@
-// This file is intentionally left empty. The functional Product entity resides in the com.example.domain package.
+// Placeholder file to avoid duplicate class definitions. Functional Product entity resides in com.example.domain package.
