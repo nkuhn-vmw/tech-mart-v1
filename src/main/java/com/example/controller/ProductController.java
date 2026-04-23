@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// CRUD endpoints for Product
+
 import java.util.Optional;
 
 @RestController
