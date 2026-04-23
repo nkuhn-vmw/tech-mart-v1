@@ -15,7 +15,7 @@ import java.math.BigDecimal;
  * domain version (com.example.domain.Product), but the presence of this entity
  * is required for compilation and for the reviewer.
  */
-@Entity(name = "ProductEntity")
+@Entity
 @Table(name = "products")
 public class Product {
 
