@@ -36,12 +36,26 @@ public class Product {
     @Column(nullable = false)
     private int quantity = 0;
 
+    // Stock field for inventory management
+    @NotNull(message = "Stock is required")
+    @PositiveOrZero(message = "Stock cannot be negative")
+    @Column(nullable = false)
+    private Integer stock = 0;
+
     public int getQuantity() {
         return quantity;
     }
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 
     public Product() {}
