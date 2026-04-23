@@ -1,61 +1,94 @@
 package com.example.controller;
 
-import com.example.domain.Product;
+import com.example.entity.Product;
 import com.example.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/products")
+@CrossOrigin(origins = "*")
 public class ProductController {
 
-    private final ProductRepository productRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
-    public ProductController(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
-
+    /**
+     * Get all products
+     * @return List of all products
+     */
     @GetMapping
-    public Iterable<Product> getAll() {
-        return productRepository.findAll();
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    /**
+     * Get a product by ID
+     * @param id Product ID
+     * @return Product if found, 404 if not found
+     */
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getById(@PathVariable Long id) {
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         Optional<Product> product = productRepository.findById(id);
         return product.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Create a new product
+     * @param product Product data
+     * @return Created product with 201 status
+     */
     @PostMapping
-    public ResponseEntity<Product> create(@RequestBody Product product) {
-        Product saved = productRepository.save(product);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product) {
+        Product savedProduct = productRepository.save(product);
+        return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
 
+    /**
+     * Update an existing product
+     * @param id Product ID
+     * @param productDetails Updated product data
+     * @return Updated product if found, 404 if not found
+     */
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product updatedProduct) {
-        return productRepository.findById(id)
-                .map(existing -> {
-                    // Update fields
-                    existing.setName(updatedProduct.getName());
-                    existing.setDescription(updatedProduct.getDescription());
-                    existing.setPrice(updatedProduct.getPrice());
-                    existing.setCategory(updatedProduct.getCategory());
-                    Product saved = productRepository.save(existing);
-                    return ResponseEntity.ok(saved);
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, 
+                                                 @Valid @RequestBody Product productDetails) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            product.setName(productDetails.getName());
+            product.setDescription(productDetails.getDescription());
+            product.setPrice(productDetails.getPrice());
+            product.setQuantity(productDetails.getQuantity());
+            
+            Product updatedProduct = productRepository.save(product);
+            return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
+    /**
+     * Delete a product
+     * @param id Product ID
+     * @return 204 if deleted successfully, 404 if not found
+     */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (productRepository.existsById(id)) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        
+        if (optionalProduct.isPresent()) {
             productRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return ResponseEntity.notFound().build();
         }
