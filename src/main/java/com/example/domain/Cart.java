@@ -9,7 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import com.example.domain.User;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.FetchType; // Added to support lazy loading
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 import java.util.ArrayList;
