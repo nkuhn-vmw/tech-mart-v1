@@ -1,6 +1,6 @@
 package com.example.entity;
 
-import com.example.domain.Category;
+import com.example.entity.Category;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

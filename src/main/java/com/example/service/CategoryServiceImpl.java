@@ -1,6 +1,6 @@
 package com.example.service;
 
-import com.example.domain.Category;
+import com.example.entity.Category;
 import com.example.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

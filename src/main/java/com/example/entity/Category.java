@@ -1,6 +1,4 @@
-package com.example.domain;
-
-import com.example.entity.Product;
+package com.example.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -70,7 +68,7 @@ public class Category {
         this.products = products;
     }
 
-    // Helper methods to manage bi-directional relationship
+    // Helper methods for bi-directional relationship
     public void addProduct(Product product) {
         products.add(product);
         product.setCategory(this);

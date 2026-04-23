@@ -1,6 +1,6 @@
 package com.example.service;
 
-import com.example.domain.Product;
+import com.example.entity.Product;
 import java.util.List;
 
 public interface ProductService {

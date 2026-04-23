@@ -1,41 +1,33 @@
 package com.example.domain;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "products")
+/**
+ * Domain model for Product. This class is used in service layer and is not a JPA entity.
+ */
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
-    @Column(nullable = false)
     private String name;
 
-    @Column(length = 1024)
     private String description;
 
     @NotNull
     @Positive
-    @Column(nullable = false)
     private BigDecimal price;
 
     // Stock quantity for the product
     @NotNull
     @PositiveOrZero
-    @Column(nullable = false)
     private Integer stock;
 
-    // Relationship to Category
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    // Relationship to Category (domain model)
     private Category category;
 
     // Constructors

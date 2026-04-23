@@ -2,7 +2,7 @@ package com.example.service;
 
 import com.example.domain.Cart;
 import com.example.domain.CartItem;
-import com.example.domain.Product;
+import com.example.entity.Product;
 import com.example.exception.InsufficientStockException;
 import com.example.exception.InvalidProductException;
 import com.example.repository.CartItemRepository;
