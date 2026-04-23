@@ -8,11 +8,30 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+
+
 public class Cart {
+
+    // Getters and Setters for user
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    // Reference to the owning user
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
