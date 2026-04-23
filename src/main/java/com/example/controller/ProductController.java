@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.entity.Product;
+import com.example.domain.Product;
 import com.example.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -68,7 +68,7 @@ public class ProductController {
             product.setName(productDetails.getName());
             product.setDescription(productDetails.getDescription());
             product.setPrice(productDetails.getPrice());
-            product.setQuantity(productDetails.getQuantity());
+            product.setStock(productDetails.getStock());
             
             Product updatedProduct = productRepository.save(product);
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
