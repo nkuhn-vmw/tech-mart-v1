@@ -47,6 +47,14 @@ public class Product {
         this.category = category;
     }
 
+    // Convenience constructor without explicit stock (default to null)
+    public Product(String name, String description, BigDecimal price, Category category) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.category = category;
+    }
+
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
