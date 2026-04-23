@@ -7,88 +7,59 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = "*")
 public class ProductController {
 
     @Autowired
     private ProductRepository productRepository;
 
-    /**
-     * Get all products
-     * @return List of all products
-     */
+    // Get all products
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 
-    /**
-     * Get a product by ID
-     * @param id Product ID
-     * @return Product if found, 404 if not found
-     */
+    // Get product by ID
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         Optional<Product> product = productRepository.findById(id);
-        return product.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return product.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Create a new product
-     * @param product Product data
-     * @return Created product with 201 status
-     */
+    // Create new product
     @PostMapping
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product) {
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         Product savedProduct = productRepository.save(product);
-        return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
     }
 
-    /**
-     * Update an existing product
-     * @param id Product ID
-     * @param productDetails Updated product data
-     * @return Updated product if found, 404 if not found
-     */
+    // Update product
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, 
-                                                 @Valid @RequestBody Product productDetails) {
-        Optional<Product> optionalProduct = productRepository.findById(id);
-        
-        if (optionalProduct.isPresent()) {
-            Product product = optionalProduct.get();
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
+        Optional<Product> productOptional = productRepository.findById(id);
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
             product.setName(productDetails.getName());
             product.setDescription(productDetails.getDescription());
             product.setPrice(productDetails.getPrice());
             product.setStock(productDetails.getStock());
-            
             Product updatedProduct = productRepository.save(product);
-            return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+            return ResponseEntity.ok(updatedProduct);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    /**
-     * Delete a product
-     * @param id Product ID
-     * @return 204 if deleted successfully, 404 if not found
-     */
+    // Delete product
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        Optional<Product> optionalProduct = productRepository.findById(id);
-        
-        if (optionalProduct.isPresent()) {
+        if (productRepository.existsById(id)) {
             productRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
         }

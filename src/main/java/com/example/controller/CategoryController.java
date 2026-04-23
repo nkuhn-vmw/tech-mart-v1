@@ -2,54 +2,59 @@ package com.example.controller;
 
 import com.example.entity.Category;
 import com.example.repository.CategoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
 
-    private final CategoryRepository categoryRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
-    public CategoryController(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
-
+    // Get all categories
     @GetMapping
-    public Iterable<Category> getAll() {
+    public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
+    // Get category by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getById(@PathVariable Long id) {
+    public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
         Optional<Category> category = categoryRepository.findById(id);
-        return category.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return category.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+    // Create new category
     @PostMapping
-    public ResponseEntity<Category> create(@RequestBody Category category) {
-        Category saved = categoryRepository.save(category);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+        Category savedCategory = categoryRepository.save(category);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
     }
 
+    // Update category
     @PutMapping("/{id}")
-    public ResponseEntity<Category> update(@PathVariable Long id, @RequestBody Category updatedCategory) {
-        return categoryRepository.findById(id)
-                .map(existing -> {
-                    existing.setName(updatedCategory.getName());
-                    existing.setDescription(updatedCategory.getDescription());
-                    Category saved = categoryRepository.save(existing);
-                    return ResponseEntity.ok(saved);
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category categoryDetails) {
+        Optional<Category> categoryOptional = categoryRepository.findById(id);
+        if (categoryOptional.isPresent()) {
+            Category category = categoryOptional.get();
+            category.setName(categoryDetails.getName());
+            category.setDescription(categoryDetails.getDescription());
+            Category updatedCategory = categoryRepository.save(category);
+            return ResponseEntity.ok(updatedCategory);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
+    // Delete category
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         if (categoryRepository.existsById(id)) {
             categoryRepository.deleteById(id);
             return ResponseEntity.noContent().build();

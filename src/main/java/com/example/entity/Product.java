@@ -1,55 +1,43 @@
 package com.example.entity;
 
-import com.example.entity.Category;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
-import java.math.BigDecimal;
 
-/**
- * JPA entity representing a product.
- * This class satisfies the requirement that a Product entity exists in the
- * com.example.entity package. The functional code in the application uses the
- * domain version (com.example.domain.Product), but the presence of this entity
- * is required for compilation and for the reviewer.
- */
 @Entity
 @Table(name = "products")
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Product name is required")
     @Column(nullable = false)
     private String name;
 
-    @Column(length = 1024)
+    @Column(length = 1000)
     private String description;
 
-    @NotNull
-    @Positive
-    @Column(nullable = false)
-    private BigDecimal price;
+    @NotNull(message = "Price is required")
+    @Positive(message = "Price must be positive")
+    @Column(nullable = false, precision = 10, scale = 2)
+    private Double price;
 
-    // Stock quantity for the product
-    @NotNull
-    @PositiveOrZero
+    @NotNull(message = "Stock is required")
+    @PositiveOrZero(message = "Stock cannot be negative")
     @Column(nullable = false)
     private Integer stock;
 
-    // Relationship to Category (stored in the domain package)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id")
     private Category category;
 
     // Constructors
     public Product() {}
 
-    public Product(String name, String description, BigDecimal price, Integer stock, Category category) {
+    public Product(String name, String description, Double price, Integer stock, Category category) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -82,11 +70,11 @@ public class Product {
         this.description = description;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
