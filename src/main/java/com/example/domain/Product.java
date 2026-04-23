@@ -1,0 +1,1 @@
+// Deprecated placeholder removed. Functional Product entity resides in com.example.entity.Product.
